@@ -495,8 +495,16 @@
         },
 
         updateFormInputs: function () {
-            this.container.find('input[name=daterangepicker_start]').val(this.startDate.format(this.format));
-            this.container.find('input[name=daterangepicker_end]').val(this.endDate.format(this.format));
+            var start = this.startDate.format(this.format);
+            if (start === 'Invalid date') {
+                start = '';
+            }
+            var end = this.endDate.format(this.format);
+            if (end === 'Invalid date') {
+                end = '';
+            }
+            this.container.find('input[name=daterangepicker_start]').val(start);
+            this.container.find('input[name=daterangepicker_end]').val(end);
 
             if (this.startDate.isSame(this.endDate) || this.startDate.isBefore(this.endDate)) {
                 this.container.find('button.applyBtn').removeAttr('disabled');
@@ -661,8 +669,9 @@
             this.element.removeClass('active');
             this.container.hide();
 
-            if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
+            if (this.startDate.format() !== this.oldStartDate.format() || this.endDate.format() !== this.oldEndDate.format()) {
                 this.notify();
+            }
 
             this.oldStartDate = this.startDate.clone();
             this.oldEndDate = this.endDate.clone();
